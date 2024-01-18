@@ -1,4 +1,4 @@
-use maud::{html, Markup, DOCTYPE};
+use maud::{html, Markup, PreEscaped, DOCTYPE};
 
 use crate::Todo;
 
@@ -16,6 +16,7 @@ pub fn page_base(config: PageBaseConfig) -> Markup {
                 title { (config.title) }
                 meta charset="UTF-8";
                 link href="/assets/tailwind.css" rel="stylesheet";
+                (PreEscaped("<script src=\"/assets/htmx.min.js\"></script>"))
             }
             body {
                 @if let Some(navigation) = config.navigation {
@@ -81,7 +82,6 @@ pub fn todo_list(todos: Vec<Todo>) -> Markup {
                 @for todo in todos {
                     (todo_item(todo))
                 }
-
             }
         }
     }
