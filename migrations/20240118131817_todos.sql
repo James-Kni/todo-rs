@@ -1,0 +1,7 @@
+-- Add migration script here
+CREATE TABLE todos (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  complete BOOLEAN DEFAULT 0 NOT NULL,
+  "order" INTEGER DEFAULT 0 NOT NULL
+)
