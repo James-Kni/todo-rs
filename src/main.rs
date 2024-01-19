@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use api::create_api_router;
-use axum::{routing::get, Router};
+use axum::{extract::State, routing::get, Router};
 use db::setup_db_pool;
 use maud::Markup;
 use pages::home_page;
@@ -14,6 +14,7 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 mod api;
 mod components;
 mod db;
+mod icons;
 mod pages;
 
 #[derive(Debug)]
@@ -58,6 +59,12 @@ async fn main() {
         .unwrap();
 }
 
-async fn home_handler() -> Markup {
-    home_page()
+async fn home_handler(State(state): State<Arc<AppState>>) -> Markup {
+    match sqlx::query_as!(Todo, "SELECT * FROM todos")
+        .fetch_all(&state.pool)
+        .await
+    {
+        Ok(todos) => home_page(todos),
+        Err(_) => home_page(vec![]),
+    }
 }
